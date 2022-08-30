@@ -1,5 +1,5 @@
 class Calculator {
-    constructor(currentOperandText, previousOperandText) {
+    constructor(previousOperandText, currentOperandText) {
         this.previousOperandText = previousOperandText
         this.currentOperandText = currentOperandText
         this.clear()
@@ -16,11 +16,18 @@ class Calculator {
     }
 
     appendNumber(number) {
+        if (number === '.' && this.currentOperand.includes('.')) return
         this.currentOperand = this.currentOperand.toString() + number.toString()
     }
 
     chooseOperation(operation) {
-
+        if (this.currentOperand === '') return
+        if (this.previousOperand != '') {
+            this.calculate()
+        }
+        this.operation = operation
+        this.previousOperand = this.currentOperand
+        this.currentOperand = ''
     }
 
     calculate() {
@@ -29,6 +36,7 @@ class Calculator {
 
     updateDisplay() {
         this.currentOperandText.innerText = this.currentOperand
+        this.previousOperandText.innerText = this.previousOperand
     }
 }
 
@@ -46,6 +54,13 @@ const calculator = new Calculator(previousOperandText, currentOperandText);
 numberButtons.forEach(button => {
     button.addEventListener('click', () => {
         calculator.appendNumber(button.innerText)
+        calculator.updateDisplay()
+    })
+})
+
+operationButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        calculator.chooseOperation(button.innerText)
         calculator.updateDisplay()
     })
 })
