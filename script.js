@@ -42,7 +42,7 @@ class Calculator {
             case '-':
               computation = previous - current
               break
-            case '*':
+            case '×':
               computation = previous * current
               break
             case '÷':
@@ -56,12 +56,31 @@ class Calculator {
         this.previousOperand = ''
     }
 
+    getNumber(number) {
+        const stringNumber = number.toString()
+        const integerDigits = parseFloat(stringNumber.split('.')[0])
+        const decimalDigits = stringNumber.split('.')[1]
+        let integerDisplay 
+        if (isNaN(integerDigits)) {
+            integerDisplay = ''
+        } else integerDisplay = integerDigits.toLocaleString('en', {
+            maximumFractionDigits: 0 })
+        if (decimalDigits != null) {
+            return `${integerDisplay}.${decimalDigits}`
+        } else {
+          return integerDisplay
+        }
+    }
+
     updateDisplay() {
-        this.currentOperandText.innerText = this.currentOperand
-        this.previousOperandText.innerText = this.previousOperand
+        this.currentOperandText.innerText = this.getNumber(this.currentOperand)
+        if (this.operation != null) {
+            this.previousOperandText.innerText = `${this.getNumber(this.previousOperand)} ${this.operation}`
+        } else {
+            this.previousOperandText.innerText = ''
+        }
     }
 }
-
 
 const numberButtons = document.querySelectorAll('[data-number]');
 const operationButtons = document.querySelectorAll('[data-operation]');
